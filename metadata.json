@@ -1,0 +1,6 @@
+{
+  "name": "SmartPredict AI - Student Performance Predictor",
+  "description": "An end-to-end full-stack AI/ML student academic performance predictor with Decision Tree classification, confidence scoring, dynamic recommendations, and rich data visualizations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
