@@ -4,17 +4,19 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Navbar } from './components/Navbar';
+import { Navbar, NavTabType } from './components/Navbar';
 import { PredictionForm } from './components/PredictionForm';
 import { ResultCard } from './components/ResultCard';
 import { Charts } from './components/Charts';
 import { WhatIfSimulator } from './components/WhatIfSimulator';
+import { ScenarioComparator } from './components/ScenarioComparator';
 import { DatasetExplorer } from './components/DatasetExplorer';
 import { ModelExplorer } from './components/ModelExplorer';
 import { ApiConsole } from './components/ApiConsole';
 import { AboutModal } from './components/AboutModal';
+import { PredictionHistory, HistoryItem } from './components/PredictionHistory';
 import { StudentInput, PredictionResponse, StudentRecord } from './types/student';
-import { PRESET_PROFILES, COHORT_BENCHMARKS } from './lib/dataset';
+import { PRESET_PROFILES, COHORT_BENCHMARKS, MODEL_METRICS } from './lib/dataset';
 import { predictStudentPerformance } from './lib/mlEngine';
 import { 
   Sparkles, 
@@ -27,12 +29,17 @@ import {
   GraduationCap, 
   CheckCircle2,
   AlertCircle,
-  HelpCircle
+  HelpCircle,
+  History,
+  ShieldAlert,
+  GitCompare
 } from 'lucide-react';
+
+const STORAGE_HISTORY_KEY = 'smartpredict_history_v2';
 
 export default function App() {
   // Navigation
-  const [activeTab, setActiveTab] = useState<'predictor' | 'visualizations' | 'simulator' | 'dataset' | 'model' | 'api'>('predictor');
+  const [activeTab, setActiveTab] = useState<NavTabType>('predictor');
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [apiConnected, setApiConnected] = useState(true);
 
@@ -43,6 +50,50 @@ export default function App() {
   const [predictionResult, setPredictionResult] = useState<PredictionResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Local Prediction History
+  const [history, setHistory] = useState<HistoryItem[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_HISTORY_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Save history to local storage
+  const saveToHistory = (input: StudentInput, response: PredictionResponse) => {
+    const newItem: HistoryItem = {
+      id: `hist-${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      input: { ...input },
+      prediction: response.prediction,
+      confidence: response.confidence,
+    };
+    setHistory((prev) => {
+      const updated = [newItem, ...prev.slice(0, 19)];
+      try {
+        localStorage.setItem(STORAGE_HISTORY_KEY, JSON.stringify(updated));
+      } catch {
+        // ignore
+      }
+      return updated;
+    });
+  };
+
+  const handleClearHistory = () => {
+    setHistory([]);
+    try {
+      localStorage.removeItem(STORAGE_HISTORY_KEY);
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleSelectHistoryItem = (item: HistoryItem) => {
+    setStudentInput(item.input);
+    runPrediction(item.input);
+  };
 
   // Run initial prediction on load so the interface immediately displays rich data
   useEffect(() => {
@@ -86,11 +137,13 @@ export default function App() {
       const data: PredictionResponse = await res.json();
       setPredictionResult(data);
       setApiConnected(true);
+      saveToHistory(dataToSend, data);
     } catch (err: any) {
-      console.warn('Backend /predict failed, running via local ML engine fallback:', err.message);
-      // Seamless client-side ML engine fallback ensures no interruption
+      console.warn('Backend /predict failed, running via isomorphic Scikit-Learn tree fallback:', err.message);
+      // Seamless client-side ML engine fallback ensures uninterrupted workflow
       const fallbackResult = predictStudentPerformance(dataToSend);
       setPredictionResult(fallbackResult);
+      saveToHistory(dataToSend, fallbackResult);
       if (!err.message.includes('failed to fetch')) {
         setErrorMessage(err.message);
       }
@@ -140,45 +193,45 @@ export default function App() {
         {activeTab === 'predictor' && (
           <div className="space-y-6 animate-in fade-in duration-200">
             
-            {/* Quick Banner */}
+            {/* Quick Hero Banner */}
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 p-5 sm:p-6 border border-slate-800 shadow-xl">
               <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 text-[11px] font-bold uppercase tracking-wider">
-                      Decision Tree ML Engine
+                      Scikit-Learn ML ({((MODEL_METRICS.accuracy) * 100).toFixed(1)}% Accuracy)
                     </span>
-                    <span className="text-xs text-slate-400">|</span>
+                    <span className="text-xs text-slate-500">|</span>
                     <span className="text-xs text-slate-300 font-mono">
-                      Cohort Baseline: {COHORT_BENCHMARKS.study_hours}h study / {COHORT_BENCHMARKS.attendance_pct}% att
+                      Cohort Baseline: {COHORT_BENCHMARKS.study_hours}h study • {COHORT_BENCHMARKS.attendance_pct}% attendance
                     </span>
                   </div>
                   <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mt-1.5">
-                    Student Performance Predictor
+                    AI-Powered Student Performance Predictor
                   </h1>
                   <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
                     Evaluate 7 high-impact academic metrics to forecast semester classification into 
                     <strong className="text-cyan-400"> Excellent</strong>, 
                     <strong className="text-emerald-400"> Good</strong>, 
                     <strong className="text-amber-400"> Average</strong>, or 
-                    <strong className="text-rose-400"> Needs Improvement</strong> with AI-powered guidance.
+                    <strong className="text-rose-400"> Needs Improvement</strong> with explainable AI factors and personalized guidance.
                   </p>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setActiveTab('visualizations')}
-                    className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-700/80 transition-colors shadow-sm"
-                  >
-                    <BarChart3 className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>View Cohort Charts</span>
-                  </button>
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     onClick={() => setActiveTab('simulator')}
-                    className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-xs font-semibold text-cyan-300 border border-cyan-500/40 transition-colors shadow-sm"
+                    className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-xs font-semibold text-cyan-300 border border-cyan-500/40 transition-colors shadow-sm"
                   >
                     <Sliders className="w-3.5 h-3.5 text-cyan-400" />
                     <span>What-If Lab</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('compare')}
+                    className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-xs font-semibold text-indigo-300 border border-indigo-500/40 transition-colors shadow-sm"
+                  >
+                    <GitCompare className="w-3.5 h-3.5 text-indigo-400" />
+                    <span>Compare Scenarios</span>
                   </button>
                 </div>
               </div>
@@ -187,18 +240,25 @@ export default function App() {
             {/* Split Screen Layout: Left Form / Right Result Card */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
               
-              {/* Left Column: 7 Input Parameters Form (5 cols on large) */}
-              <div className="lg:col-span-6 xl:col-span-6">
+              {/* Left Column: 7 Input Parameters Form (6 cols on large) */}
+              <div className="lg:col-span-6 space-y-6">
                 <PredictionForm
                   input={studentInput}
                   setInput={setStudentInput}
                   onSubmit={() => runPrediction()}
                   isLoading={isLoading}
                 />
+
+                {/* Local Prediction History Box */}
+                <PredictionHistory
+                  history={history}
+                  onSelect={handleSelectHistoryItem}
+                  onClear={handleClearHistory}
+                />
               </div>
 
               {/* Right Column: Prediction Outcome & Recommendations (6 cols on large) */}
-              <div className="lg:col-span-6 xl:col-span-6 space-y-6">
+              <div className="lg:col-span-6 space-y-6">
                 <ResultCard
                   result={predictionResult}
                   input={studentInput}
@@ -208,8 +268,8 @@ export default function App() {
                 {/* Quick Shortcuts to other features */}
                 <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="text-xs text-slate-400">
-                    <strong className="text-white">Explore Sensitivity: </strong>
-                    Want to see what happens if you increase study hours or sleep?
+                    <strong className="text-white">Sensitivity Analysis: </strong>
+                    Simulate how increasing study hours by +1.5h or regularizing sleep impacts your standing.
                   </div>
                   <button
                     onClick={() => setActiveTab('simulator')}
@@ -245,21 +305,28 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 4: DATASET & BATCH */}
+        {/* TAB 4: SCENARIO COMPARATOR */}
+        {activeTab === 'compare' && (
+          <div className="space-y-6 animate-in fade-in duration-200">
+            <ScenarioComparator currentInput={studentInput} />
+          </div>
+        )}
+
+        {/* TAB 5: DATASET & BATCH */}
         {activeTab === 'dataset' && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <DatasetExplorer onSelectStudent={handleSelectStudentFromDataset} />
           </div>
         )}
 
-        {/* TAB 5: MODEL ARCHITECTURE */}
+        {/* TAB 6: MODEL ARCHITECTURE */}
         {activeTab === 'model' && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <ModelExplorer />
           </div>
         )}
 
-        {/* TAB 6: REST API PLAYGROUND */}
+        {/* TAB 7: REST API PLAYGROUND */}
         {activeTab === 'api' && (
           <div className="space-y-6 animate-in fade-in duration-200">
             <ApiConsole currentInput={studentInput} />
@@ -275,20 +342,25 @@ export default function App() {
             <GraduationCap className="w-4 h-4 text-cyan-400" />
             <span className="font-semibold text-slate-300">SmartPredict AI</span>
             <span>—</span>
-            <span>Student Academic Performance Predictor</span>
+            <span>Scikit-Learn Powered Student Performance Intelligence</span>
           </div>
 
           <div className="flex items-center space-x-6 text-[11px]">
             <button onClick={() => setShowAboutModal(true)} className="hover:text-cyan-400 transition-colors">
-              Project Overview
+              Documentation & Architecture
             </button>
             <button onClick={() => setActiveTab('api')} className="hover:text-cyan-400 transition-colors">
-              API Specs (POST /predict)
+              REST API (POST /predict)
             </button>
             <button onClick={() => setActiveTab('model')} className="hover:text-cyan-400 transition-colors">
-              Decision Tree Metrics
+              Model Card
             </button>
           </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-3 pt-3 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+          <span>Reproducible synthetic demonstration dataset generated for educational ML experimentation.</span>
+          <span>FERPA Compliant • Formative Academic Self-Assessment Only</span>
         </div>
       </footer>
 

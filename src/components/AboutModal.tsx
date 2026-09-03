@@ -92,6 +92,13 @@ export const AboutModal: React.FC<AboutModalProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
+              <div className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800">
+                <h5 className="font-bold text-amber-300 mb-1">Dataset Provenance & Ethics</h5>
+                <p className="text-[11px] text-slate-400">
+                  Reproducible synthetic demonstration dataset generated for educational ML experimentation. Real student transcript records cannot be publicly distributed due to FERPA compliance and privacy mandates. Results demonstrate machine learning modeling mechanics and cannot be generalized to real students.
+                </p>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div className="bg-slate-950/60 p-3.5 rounded-xl border border-slate-800">
                   <h5 className="font-bold text-cyan-300 mb-1">Frontend</h5>
@@ -218,7 +225,7 @@ Backend/
               <span>contact@smartpredict.ai</span>
             </span>
           </div>
-          <span className="text-slate-500 font-mono">For demo & portfolio use only</span>
+          <span className="text-slate-500 font-mono">Reproducible synthetic demonstration dataset • FERPA compliance</span>
         </div>
 
       </div>

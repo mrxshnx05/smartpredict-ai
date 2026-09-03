@@ -1,0 +1,209 @@
+{
+  "modelName": "SmartPredict Decision Tree Classifier",
+  "algorithm": "Scikit-learn DecisionTreeClassifier (Gini Impurity)",
+  "version": "v1.0.0",
+  "datasetVersion": "v1.0",
+  "trainingDate": "2026-09-03T14:54:26Z",
+  "dataset": {
+    "description": "Reproducible synthetic demonstration dataset generated for educational ML experimentation.",
+    "type": "Synthetic (Gaussian / Stratified normal parameterization)",
+    "recordCount": 1000,
+    "trainingRecords": 800,
+    "testRecords": 200,
+    "disclaimer": "Generated synthetically for reproducible educational ML demonstration. Does not reflect actual student records, and results cannot be generalized to real students."
+  },
+  "environment": {
+    "pythonVersion": "3.10.12",
+    "scikitLearnVersion": "1.7.2",
+    "pandasVersion": "2.3.3",
+    "numpyVersion": "2.2.6",
+    "joblibVersion": "1.6.0",
+    "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+    "trainingCommand": "python3 backend/ml/train_model.py"
+  },
+  "modelSelectionRationale": "DecisionTreeClassifier is retained as the primary production architecture over LogisticRegression because it provides 100% white-box, step-wise interpretable decision boundaries with explicit quantitative thresholds (e.g., Previous score <= 71.55, Study hours >= 6.15). In academic advising, interpretable counterfactual rules and threshold diagnostics are significantly more actionable and verifiable for students and counselors than high-dimensional logit dot products without discrete step boundaries.",
+  "datasetSize": 1000,
+  "trainingSamples": 800,
+  "testSamples": 200,
+  "randomSeed": 42,
+  "features": [
+    {
+      "key": "previous_score",
+      "name": "Previous Exam Score",
+      "importance": 0.6831,
+      "benchmarkAverage": 69.44
+    },
+    {
+      "key": "assignment_completion",
+      "name": "Assignment Turn-In Rate (%)",
+      "importance": 0.1676,
+      "benchmarkAverage": 76.2
+    },
+    {
+      "key": "previous_performance",
+      "name": "Historical Performance (1-10)",
+      "importance": 0.0771,
+      "benchmarkAverage": 5.73
+    },
+    {
+      "key": "participation",
+      "name": "Class Participation (1-10)",
+      "importance": 0.0357,
+      "benchmarkAverage": 5.59
+    },
+    {
+      "key": "study_hours",
+      "name": "Daily Study Hours",
+      "importance": 0.0304,
+      "benchmarkAverage": 3.97
+    },
+    {
+      "key": "attendance_pct",
+      "name": "Attendance Rate (%)",
+      "importance": 0.0061,
+      "benchmarkAverage": 77.43
+    },
+    {
+      "key": "sleep_hours",
+      "name": "Sleep Duration (hrs/day)",
+      "importance": 0.0,
+      "benchmarkAverage": 6.66
+    }
+  ],
+  "featureNames": [
+    "study_hours",
+    "attendance_pct",
+    "previous_score",
+    "assignment_completion",
+    "sleep_hours",
+    "participation",
+    "previous_performance"
+  ],
+  "targetClasses": [
+    "Needs Improvement",
+    "Average",
+    "Good",
+    "Excellent"
+  ],
+  "metrics": {
+    "evaluationMethodology": "80/20 Stratified Train/Test Partition + 5-Fold Stratified Cross-Validation on Training Split",
+    "testSamples": 200,
+    "testAccuracy": 0.86,
+    "testPrecisionMacro": 0.8626,
+    "testRecallMacro": 0.8624,
+    "testF1Macro": 0.8617,
+    "accuracy": 0.86,
+    "precision": 0.8626,
+    "recall": 0.8624,
+    "f1Score": 0.8617,
+    "cvFolds": 5,
+    "cvAccuracyMean": 0.845,
+    "cvAccuracyStd": 0.0453,
+    "cvScores": [
+      0.85,
+      0.875,
+      0.875,
+      0.8688,
+      0.7562
+    ],
+    "treeDepth": 5,
+    "numberOfLeaves": 16
+  },
+  "perClassMetrics": {
+    "Needs Improvement": {
+      "precision": 0.8226,
+      "recall": 0.85,
+      "f1Score": 0.8361,
+      "support": 60
+    },
+    "Average": {
+      "precision": 0.8529,
+      "recall": 0.9062,
+      "f1Score": 0.8788,
+      "support": 32
+    },
+    "Good": {
+      "precision": 0.875,
+      "recall": 0.875,
+      "f1Score": 0.875,
+      "support": 64
+    },
+    "Excellent": {
+      "precision": 0.9,
+      "recall": 0.8182,
+      "f1Score": 0.8571,
+      "support": 44
+    }
+  },
+  "confusionMatrix": {
+    "classes": [
+      "Needs Improvement",
+      "Average",
+      "Good",
+      "Excellent"
+    ],
+    "matrix": [
+      [
+        36,
+        8,
+        0,
+        0
+      ],
+      [
+        4,
+        51,
+        5,
+        0
+      ],
+      [
+        0,
+        3,
+        56,
+        5
+      ],
+      [
+        0,
+        0,
+        3,
+        29
+      ]
+    ]
+  },
+  "comparatorModel": {
+    "algorithm": "Logistic Regression (Multinomial L-BFGS, StandardScaler)",
+    "testAccuracy": 0.98,
+    "testPrecisionMacro": 0.9842,
+    "testRecallMacro": 0.9748,
+    "testF1Macro": 0.9791,
+    "accuracy": 0.98,
+    "precision": 0.9842,
+    "recall": 0.9748,
+    "f1Score": 0.9791,
+    "cvFolds": 5,
+    "cvAccuracyMean": 0.9712,
+    "cvAccuracyStd": 0.0146,
+    "cvScores": [
+      0.9688,
+      0.9812,
+      0.9812,
+      0.9812,
+      0.9437
+    ]
+  },
+  "benchmarks": {
+    "study_hours": 3.97,
+    "attendance_pct": 77.43,
+    "previous_score": 69.44,
+    "assignment_completion": 76.2,
+    "sleep_hours": 6.66,
+    "participation": 5.59,
+    "previous_performance": 5.73
+  },
+  "classDistribution": {
+    "Good": 320,
+    "Average": 300,
+    "Needs Improvement": 220,
+    "Excellent": 160
+  },
+  "treeText": "|--- previous_score <= 71.55\n|   |--- previous_score <= 51.45\n|   |   |--- assignment_completion <= 67.30\n|   |   |   |--- class: Needs Improvement\n|   |   |--- assignment_completion >  67.30\n|   |   |   |--- study_hours <= 2.55\n|   |   |   |   |--- class: Needs Improvement\n|   |   |   |--- study_hours >  2.55\n|   |   |   |   |--- class: Average\n|   |--- previous_score >  51.45\n|   |   |--- assignment_completion <= 55.85\n|   |   |   |--- participation <= 3.50\n|   |   |   |   |--- class: Needs Improvement\n|   |   |   |--- participation >  3.50\n|   |   |   |   |--- class: Needs Improvement\n|   |   |--- assignment_completion >  55.85\n|   |   |   |--- assignment_completion <= 88.45\n|   |   |   |   |--- participation <= 1.50\n|   |   |   |   |   |--- class: Needs Improvement\n|   |   |   |   |--- participation >  1.50\n|   |   |   |   |   |--- class: Average\n|   |   |   |--- assignment_completion >  88.45\n|   |   |   |   |--- class: Good\n|--- previous_score >  71.55\n|   |--- previous_score <= 86.55\n|   |   |--- previous_performance <= 4.50\n|   |   |   |--- class: Average\n|   |   |--- previous_performance >  4.50\n|   |   |   |--- assignment_completion <= 70.40\n|   |   |   |   |--- class: Average\n|   |   |   |--- assignment_completion >  70.40\n|   |   |   |   |--- study_hours <= 6.15\n|   |   |   |   |   |--- class: Good\n|   |   |   |   |--- study_hours >  6.15\n|   |   |   |   |   |--- class: Excellent\n|   |--- previous_score >  86.55\n|   |   |--- assignment_completion <= 86.10\n|   |   |   |--- class: Good\n|   |   |--- assignment_completion >  86.10\n|   |   |   |--- previous_performance <= 7.50\n|   |   |   |   |--- attendance_pct <= 93.20\n|   |   |   |   |   |--- class: Excellent\n|   |   |   |   |--- attendance_pct >  93.20\n|   |   |   |   |   |--- class: Excellent\n|   |   |   |--- previous_performance >  7.50\n|   |   |   |   |--- class: Excellent\n"
+}

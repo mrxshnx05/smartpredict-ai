@@ -1,0 +1,692 @@
+{
+  "metadata": {
+    "modelName": "SmartPredict Decision Tree Classifier",
+    "algorithm": "Scikit-learn DecisionTreeClassifier (Gini Impurity)",
+    "version": "v1.0.0",
+    "datasetVersion": "v1.0",
+    "trainingDate": "2026-09-03T14:54:26Z",
+    "dataset": {
+      "description": "Reproducible synthetic demonstration dataset generated for educational ML experimentation.",
+      "type": "Synthetic (Gaussian / Stratified normal parameterization)",
+      "recordCount": 1000,
+      "trainingRecords": 800,
+      "testRecords": 200,
+      "disclaimer": "Generated synthetically for reproducible educational ML demonstration. Does not reflect actual student records, and results cannot be generalized to real students."
+    },
+    "environment": {
+      "pythonVersion": "3.10.12",
+      "scikitLearnVersion": "1.7.2",
+      "pandasVersion": "2.3.3",
+      "numpyVersion": "2.2.6",
+      "joblibVersion": "1.6.0",
+      "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.36",
+      "trainingCommand": "python3 backend/ml/train_model.py"
+    },
+    "modelSelectionRationale": "DecisionTreeClassifier is retained as the primary production architecture over LogisticRegression because it provides 100% white-box, step-wise interpretable decision boundaries with explicit quantitative thresholds (e.g., Previous score <= 71.55, Study hours >= 6.15). In academic advising, interpretable counterfactual rules and threshold diagnostics are significantly more actionable and verifiable for students and counselors than high-dimensional logit dot products without discrete step boundaries.",
+    "datasetSize": 1000,
+    "trainingSamples": 800,
+    "testSamples": 200,
+    "randomSeed": 42,
+    "features": [
+      {
+        "key": "previous_score",
+        "name": "Previous Exam Score",
+        "importance": 0.6831,
+        "benchmarkAverage": 69.44
+      },
+      {
+        "key": "assignment_completion",
+        "name": "Assignment Turn-In Rate (%)",
+        "importance": 0.1676,
+        "benchmarkAverage": 76.2
+      },
+      {
+        "key": "previous_performance",
+        "name": "Historical Performance (1-10)",
+        "importance": 0.0771,
+        "benchmarkAverage": 5.73
+      },
+      {
+        "key": "participation",
+        "name": "Class Participation (1-10)",
+        "importance": 0.0357,
+        "benchmarkAverage": 5.59
+      },
+      {
+        "key": "study_hours",
+        "name": "Daily Study Hours",
+        "importance": 0.0304,
+        "benchmarkAverage": 3.97
+      },
+      {
+        "key": "attendance_pct",
+        "name": "Attendance Rate (%)",
+        "importance": 0.0061,
+        "benchmarkAverage": 77.43
+      },
+      {
+        "key": "sleep_hours",
+        "name": "Sleep Duration (hrs/day)",
+        "importance": 0.0,
+        "benchmarkAverage": 6.66
+      }
+    ],
+    "featureNames": [
+      "study_hours",
+      "attendance_pct",
+      "previous_score",
+      "assignment_completion",
+      "sleep_hours",
+      "participation",
+      "previous_performance"
+    ],
+    "targetClasses": [
+      "Needs Improvement",
+      "Average",
+      "Good",
+      "Excellent"
+    ],
+    "metrics": {
+      "evaluationMethodology": "80/20 Stratified Train/Test Partition + 5-Fold Stratified Cross-Validation on Training Split",
+      "testSamples": 200,
+      "testAccuracy": 0.86,
+      "testPrecisionMacro": 0.8626,
+      "testRecallMacro": 0.8624,
+      "testF1Macro": 0.8617,
+      "accuracy": 0.86,
+      "precision": 0.8626,
+      "recall": 0.8624,
+      "f1Score": 0.8617,
+      "cvFolds": 5,
+      "cvAccuracyMean": 0.845,
+      "cvAccuracyStd": 0.0453,
+      "cvScores": [
+        0.85,
+        0.875,
+        0.875,
+        0.8688,
+        0.7562
+      ],
+      "treeDepth": 5,
+      "numberOfLeaves": 16
+    },
+    "perClassMetrics": {
+      "Needs Improvement": {
+        "precision": 0.8226,
+        "recall": 0.85,
+        "f1Score": 0.8361,
+        "support": 60
+      },
+      "Average": {
+        "precision": 0.8529,
+        "recall": 0.9062,
+        "f1Score": 0.8788,
+        "support": 32
+      },
+      "Good": {
+        "precision": 0.875,
+        "recall": 0.875,
+        "f1Score": 0.875,
+        "support": 64
+      },
+      "Excellent": {
+        "precision": 0.9,
+        "recall": 0.8182,
+        "f1Score": 0.8571,
+        "support": 44
+      }
+    },
+    "confusionMatrix": {
+      "classes": [
+        "Needs Improvement",
+        "Average",
+        "Good",
+        "Excellent"
+      ],
+      "matrix": [
+        [
+          36,
+          8,
+          0,
+          0
+        ],
+        [
+          4,
+          51,
+          5,
+          0
+        ],
+        [
+          0,
+          3,
+          56,
+          5
+        ],
+        [
+          0,
+          0,
+          3,
+          29
+        ]
+      ]
+    },
+    "comparatorModel": {
+      "algorithm": "Logistic Regression (Multinomial L-BFGS, StandardScaler)",
+      "testAccuracy": 0.98,
+      "testPrecisionMacro": 0.9842,
+      "testRecallMacro": 0.9748,
+      "testF1Macro": 0.9791,
+      "accuracy": 0.98,
+      "precision": 0.9842,
+      "recall": 0.9748,
+      "f1Score": 0.9791,
+      "cvFolds": 5,
+      "cvAccuracyMean": 0.9712,
+      "cvAccuracyStd": 0.0146,
+      "cvScores": [
+        0.9688,
+        0.9812,
+        0.9812,
+        0.9812,
+        0.9437
+      ]
+    },
+    "benchmarks": {
+      "study_hours": 3.97,
+      "attendance_pct": 77.43,
+      "previous_score": 69.44,
+      "assignment_completion": 76.2,
+      "sleep_hours": 6.66,
+      "participation": 5.59,
+      "previous_performance": 5.73
+    },
+    "classDistribution": {
+      "Good": 320,
+      "Average": 300,
+      "Needs Improvement": 220,
+      "Excellent": 160
+    },
+    "treeText": "|--- previous_score <= 71.55\n|   |--- previous_score <= 51.45\n|   |   |--- assignment_completion <= 67.30\n|   |   |   |--- class: Needs Improvement\n|   |   |--- assignment_completion >  67.30\n|   |   |   |--- study_hours <= 2.55\n|   |   |   |   |--- class: Needs Improvement\n|   |   |   |--- study_hours >  2.55\n|   |   |   |   |--- class: Average\n|   |--- previous_score >  51.45\n|   |   |--- assignment_completion <= 55.85\n|   |   |   |--- participation <= 3.50\n|   |   |   |   |--- class: Needs Improvement\n|   |   |   |--- participation >  3.50\n|   |   |   |   |--- class: Needs Improvement\n|   |   |--- assignment_completion >  55.85\n|   |   |   |--- assignment_completion <= 88.45\n|   |   |   |   |--- participation <= 1.50\n|   |   |   |   |   |--- class: Needs Improvement\n|   |   |   |   |--- participation >  1.50\n|   |   |   |   |   |--- class: Average\n|   |   |   |--- assignment_completion >  88.45\n|   |   |   |   |--- class: Good\n|--- previous_score >  71.55\n|   |--- previous_score <= 86.55\n|   |   |--- previous_performance <= 4.50\n|   |   |   |--- class: Average\n|   |   |--- previous_performance >  4.50\n|   |   |   |--- assignment_completion <= 70.40\n|   |   |   |   |--- class: Average\n|   |   |   |--- assignment_completion >  70.40\n|   |   |   |   |--- study_hours <= 6.15\n|   |   |   |   |   |--- class: Good\n|   |   |   |   |--- study_hours >  6.15\n|   |   |   |   |   |--- class: Excellent\n|   |--- previous_score >  86.55\n|   |   |--- assignment_completion <= 86.10\n|   |   |   |--- class: Good\n|   |   |--- assignment_completion >  86.10\n|   |   |   |--- previous_performance <= 7.50\n|   |   |   |   |--- attendance_pct <= 93.20\n|   |   |   |   |   |--- class: Excellent\n|   |   |   |   |--- attendance_pct >  93.20\n|   |   |   |   |   |--- class: Excellent\n|   |   |   |--- previous_performance >  7.50\n|   |   |   |   |--- class: Excellent\n"
+  },
+  "tree": {
+    "classes": [
+      "Average",
+      "Excellent",
+      "Good",
+      "Needs Improvement"
+    ],
+    "featureColumns": [
+      "study_hours",
+      "attendance_pct",
+      "previous_score",
+      "assignment_completion",
+      "sleep_hours",
+      "participation",
+      "previous_performance"
+    ],
+    "root": {
+      "id": "node_0",
+      "isLeaf": false,
+      "feature": "previous_score",
+      "threshold": 71.55,
+      "predictedClass": "Good",
+      "confidence": 0.32,
+      "probabilities": {
+        "Average": 0.3,
+        "Excellent": 0.16,
+        "Good": 0.32,
+        "Needs Improvement": 0.22
+      },
+      "samples": 800,
+      "impurity": 0.7336,
+      "left": {
+        "id": "node_1",
+        "isLeaf": false,
+        "feature": "previous_score",
+        "threshold": 51.45,
+        "predictedClass": "Average",
+        "confidence": 0.4937,
+        "probabilities": {
+          "Average": 0.4937,
+          "Excellent": 0.0,
+          "Good": 0.063,
+          "Needs Improvement": 0.4433
+        },
+        "samples": 397,
+        "impurity": 0.5558,
+        "left": {
+          "id": "node_2",
+          "isLeaf": false,
+          "feature": "assignment_completion",
+          "threshold": 67.3,
+          "predictedClass": "Needs Improvement",
+          "confidence": 0.9593,
+          "probabilities": {
+            "Average": 0.0407,
+            "Excellent": 0.0,
+            "Good": 0.0,
+            "Needs Improvement": 0.9593
+          },
+          "samples": 123,
+          "impurity": 0.078,
+          "left": {
+            "id": "leaf_3",
+            "isLeaf": true,
+            "predictedClass": "Needs Improvement",
+            "confidence": 1.0,
+            "probabilities": {
+              "Average": 0.0,
+              "Excellent": 0.0,
+              "Good": 0.0,
+              "Needs Improvement": 1.0
+            },
+            "samples": 102,
+            "impurity": 0.0
+          },
+          "right": {
+            "id": "node_4",
+            "isLeaf": false,
+            "feature": "study_hours",
+            "threshold": 2.55,
+            "predictedClass": "Needs Improvement",
+            "confidence": 0.7619,
+            "probabilities": {
+              "Average": 0.2381,
+              "Excellent": 0.0,
+              "Good": 0.0,
+              "Needs Improvement": 0.7619
+            },
+            "samples": 21,
+            "impurity": 0.3628,
+            "left": {
+              "id": "leaf_5",
+              "isLeaf": true,
+              "predictedClass": "Needs Improvement",
+              "confidence": 1.0,
+              "probabilities": {
+                "Average": 0.0,
+                "Excellent": 0.0,
+                "Good": 0.0,
+                "Needs Improvement": 1.0
+              },
+              "samples": 12,
+              "impurity": 0.0
+            },
+            "right": {
+              "id": "leaf_6",
+              "isLeaf": true,
+              "predictedClass": "Average",
+              "confidence": 0.5556,
+              "probabilities": {
+                "Average": 0.5556,
+                "Excellent": 0.0,
+                "Good": 0.0,
+                "Needs Improvement": 0.4444
+              },
+              "samples": 9,
+              "impurity": 0.4938
+            }
+          }
+        },
+        "right": {
+          "id": "node_7",
+          "isLeaf": false,
+          "feature": "assignment_completion",
+          "threshold": 55.85,
+          "predictedClass": "Average",
+          "confidence": 0.6971,
+          "probabilities": {
+            "Average": 0.6971,
+            "Excellent": 0.0,
+            "Good": 0.0912,
+            "Needs Improvement": 0.2117
+          },
+          "samples": 274,
+          "impurity": 0.4609,
+          "left": {
+            "id": "node_8",
+            "isLeaf": false,
+            "feature": "participation",
+            "threshold": 3.5,
+            "predictedClass": "Needs Improvement",
+            "confidence": 0.8947,
+            "probabilities": {
+              "Average": 0.1053,
+              "Excellent": 0.0,
+              "Good": 0.0,
+              "Needs Improvement": 0.8947
+            },
+            "samples": 38,
+            "impurity": 0.1884,
+            "left": {
+              "id": "leaf_9",
+              "isLeaf": true,
+              "predictedClass": "Needs Improvement",
+              "confidence": 1.0,
+              "probabilities": {
+                "Average": 0.0,
+                "Excellent": 0.0,
+                "Good": 0.0,
+                "Needs Improvement": 1.0
+              },
+              "samples": 29,
+              "impurity": 0.0
+            },
+            "right": {
+              "id": "leaf_10",
+              "isLeaf": true,
+              "predictedClass": "Needs Improvement",
+              "confidence": 0.5556,
+              "probabilities": {
+                "Average": 0.4444,
+                "Excellent": 0.0,
+                "Good": 0.0,
+                "Needs Improvement": 0.5556
+              },
+              "samples": 9,
+              "impurity": 0.4938
+            }
+          },
+          "right": {
+            "id": "node_11",
+            "isLeaf": false,
+            "feature": "assignment_completion",
+            "threshold": 88.45,
+            "predictedClass": "Average",
+            "confidence": 0.7924,
+            "probabilities": {
+              "Average": 0.7924,
+              "Excellent": 0.0,
+              "Good": 0.1059,
+              "Needs Improvement": 0.1017
+            },
+            "samples": 236,
+            "impurity": 0.3506,
+            "left": {
+              "id": "node_12",
+              "isLeaf": false,
+              "feature": "participation",
+              "threshold": 1.5,
+              "predictedClass": "Average",
+              "confidence": 0.8274,
+              "probabilities": {
+                "Average": 0.8274,
+                "Excellent": 0.0,
+                "Good": 0.0664,
+                "Needs Improvement": 0.1062
+              },
+              "samples": 226,
+              "impurity": 0.2997,
+              "left": {
+                "id": "leaf_13",
+                "isLeaf": true,
+                "predictedClass": "Needs Improvement",
+                "confidence": 1.0,
+                "probabilities": {
+                  "Average": 0.0,
+                  "Excellent": 0.0,
+                  "Good": 0.0,
+                  "Needs Improvement": 1.0
+                },
+                "samples": 9,
+                "impurity": 0.0
+              },
+              "right": {
+                "id": "leaf_14",
+                "isLeaf": true,
+                "predictedClass": "Average",
+                "confidence": 0.8618,
+                "probabilities": {
+                  "Average": 0.8618,
+                  "Excellent": 0.0,
+                  "Good": 0.0691,
+                  "Needs Improvement": 0.0691
+                },
+                "samples": 217,
+                "impurity": 0.2478
+              }
+            },
+            "right": {
+              "id": "leaf_15",
+              "isLeaf": true,
+              "predictedClass": "Good",
+              "confidence": 1.0,
+              "probabilities": {
+                "Average": 0.0,
+                "Excellent": 0.0,
+                "Good": 1.0,
+                "Needs Improvement": 0.0
+              },
+              "samples": 10,
+              "impurity": 0.0
+            }
+          }
+        }
+      },
+      "right": {
+        "id": "node_16",
+        "isLeaf": false,
+        "feature": "previous_score",
+        "threshold": 86.55,
+        "predictedClass": "Good",
+        "confidence": 0.5732,
+        "probabilities": {
+          "Average": 0.1092,
+          "Excellent": 0.3176,
+          "Good": 0.5732,
+          "Needs Improvement": 0.0
+        },
+        "samples": 403,
+        "impurity": 0.5586,
+        "left": {
+          "id": "node_17",
+          "isLeaf": false,
+          "feature": "previous_performance",
+          "threshold": 4.5,
+          "predictedClass": "Good",
+          "confidence": 0.7631,
+          "probabilities": {
+            "Average": 0.1533,
+            "Excellent": 0.0836,
+            "Good": 0.7631,
+            "Needs Improvement": 0.0
+          },
+          "samples": 287,
+          "impurity": 0.3872,
+          "left": {
+            "id": "leaf_18",
+            "isLeaf": true,
+            "predictedClass": "Average",
+            "confidence": 1.0,
+            "probabilities": {
+              "Average": 1.0,
+              "Excellent": 0.0,
+              "Good": 0.0,
+              "Needs Improvement": 0.0
+            },
+            "samples": 24,
+            "impurity": 0.0
+          },
+          "right": {
+            "id": "node_19",
+            "isLeaf": false,
+            "feature": "assignment_completion",
+            "threshold": 70.4,
+            "predictedClass": "Good",
+            "confidence": 0.8327,
+            "probabilities": {
+              "Average": 0.076,
+              "Excellent": 0.0913,
+              "Good": 0.8327,
+              "Needs Improvement": 0.0
+            },
+            "samples": 263,
+            "impurity": 0.2925,
+            "left": {
+              "id": "leaf_20",
+              "isLeaf": true,
+              "predictedClass": "Average",
+              "confidence": 1.0,
+              "probabilities": {
+                "Average": 1.0,
+                "Excellent": 0.0,
+                "Good": 0.0,
+                "Needs Improvement": 0.0
+              },
+              "samples": 9,
+              "impurity": 0.0
+            },
+            "right": {
+              "id": "node_21",
+              "isLeaf": false,
+              "feature": "study_hours",
+              "threshold": 6.15,
+              "predictedClass": "Good",
+              "confidence": 0.8622,
+              "probabilities": {
+                "Average": 0.0433,
+                "Excellent": 0.0945,
+                "Good": 0.8622,
+                "Needs Improvement": 0.0
+              },
+              "samples": 254,
+              "impurity": 0.2458,
+              "left": {
+                "id": "leaf_22",
+                "isLeaf": true,
+                "predictedClass": "Good",
+                "confidence": 0.9083,
+                "probabilities": {
+                  "Average": 0.048,
+                  "Excellent": 0.0437,
+                  "Good": 0.9083,
+                  "Needs Improvement": 0.0
+                },
+                "samples": 229,
+                "impurity": 0.1708
+              },
+              "right": {
+                "id": "leaf_23",
+                "isLeaf": true,
+                "predictedClass": "Excellent",
+                "confidence": 0.56,
+                "probabilities": {
+                  "Average": 0.0,
+                  "Excellent": 0.56,
+                  "Good": 0.44,
+                  "Needs Improvement": 0.0
+                },
+                "samples": 25,
+                "impurity": 0.4928
+              }
+            }
+          }
+        },
+        "right": {
+          "id": "node_24",
+          "isLeaf": false,
+          "feature": "assignment_completion",
+          "threshold": 86.1,
+          "predictedClass": "Excellent",
+          "confidence": 0.8966,
+          "probabilities": {
+            "Average": 0.0,
+            "Excellent": 0.8966,
+            "Good": 0.1034,
+            "Needs Improvement": 0.0
+          },
+          "samples": 116,
+          "impurity": 0.1855,
+          "left": {
+            "id": "leaf_25",
+            "isLeaf": true,
+            "predictedClass": "Good",
+            "confidence": 0.875,
+            "probabilities": {
+              "Average": 0.0,
+              "Excellent": 0.125,
+              "Good": 0.875,
+              "Needs Improvement": 0.0
+            },
+            "samples": 8,
+            "impurity": 0.2188
+          },
+          "right": {
+            "id": "node_26",
+            "isLeaf": false,
+            "feature": "previous_performance",
+            "threshold": 7.5,
+            "predictedClass": "Excellent",
+            "confidence": 0.9537,
+            "probabilities": {
+              "Average": 0.0,
+              "Excellent": 0.9537,
+              "Good": 0.0463,
+              "Needs Improvement": 0.0
+            },
+            "samples": 108,
+            "impurity": 0.0883,
+            "left": {
+              "id": "node_27",
+              "isLeaf": false,
+              "feature": "attendance_pct",
+              "threshold": 93.2,
+              "predictedClass": "Excellent",
+              "confidence": 0.7826,
+              "probabilities": {
+                "Average": 0.0,
+                "Excellent": 0.7826,
+                "Good": 0.2174,
+                "Needs Improvement": 0.0
+              },
+              "samples": 23,
+              "impurity": 0.3403,
+              "left": {
+                "id": "leaf_28",
+                "isLeaf": true,
+                "predictedClass": "Excellent",
+                "confidence": 0.5,
+                "probabilities": {
+                  "Average": 0.0,
+                  "Excellent": 0.5,
+                  "Good": 0.5,
+                  "Needs Improvement": 0.0
+                },
+                "samples": 10,
+                "impurity": 0.5
+              },
+              "right": {
+                "id": "leaf_29",
+                "isLeaf": true,
+                "predictedClass": "Excellent",
+                "confidence": 1.0,
+                "probabilities": {
+                  "Average": 0.0,
+                  "Excellent": 1.0,
+                  "Good": 0.0,
+                  "Needs Improvement": 0.0
+                },
+                "samples": 13,
+                "impurity": 0.0
+              }
+            },
+            "right": {
+              "id": "leaf_30",
+              "isLeaf": true,
+              "predictedClass": "Excellent",
+              "confidence": 1.0,
+              "probabilities": {
+                "Average": 0.0,
+                "Excellent": 1.0,
+                "Good": 0.0,
+                "Needs Improvement": 0.0
+              },
+              "samples": 85,
+              "impurity": 0.0
+            }
+          }
+        }
+      }
+    }
+  }
+}

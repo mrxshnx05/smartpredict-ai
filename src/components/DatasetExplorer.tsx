@@ -197,7 +197,7 @@ Sophie Miller,7.0,96.0,94.0,98.0,8.0,10,9`;
             <span>Dataset & Batch Inference Center</span>
           </h3>
           <p className="text-xs text-slate-400 mt-0.5">
-            Inspect pre-loaded student training corpus ({STUDENT_DATASET.length} rows) or run bulk predictions from CSV.
+            Inspect reproducible synthetic demonstration dataset ({STUDENT_DATASET.length} rows) or run bulk predictions from CSV.
           </p>
         </div>
 
@@ -227,6 +227,15 @@ Sophie Miller,7.0,96.0,94.0,98.0,8.0,10,9`;
 
       {activeSubTab === 'dataset' ? (
         <div>
+          {/* Dataset Provenance & Privacy Notice */}
+          <div className="mb-4 p-3 rounded-xl bg-slate-950/70 border border-slate-800 flex items-start gap-2.5 text-xs text-slate-400">
+            <AlertCircle className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold text-slate-200">Dataset Provenance & Privacy Notice:</span>{' '}
+              Reproducible synthetic demonstration dataset generated for educational ML experimentation. Real student records cannot be distributed due to FERPA compliance and privacy mandates. Results demonstrate machine learning modeling mechanics and cannot be generalized to actual students.
+            </div>
+          </div>
+
           {/* Controls: Search, Category Filter, Export */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <div className="flex items-center space-x-2 flex-1 max-w-md">
@@ -414,15 +423,23 @@ Sophie Miller,7.0,96.0,94.0,98.0,8.0,10,9`;
           {/* Batch Summary & Results */}
           {batchSummary && (
             <div className="mt-4 p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <div className="flex flex-wrap items-center justify-between border-b border-slate-800 pb-2 gap-2">
                 <span className="text-xs font-bold text-white uppercase tracking-wider">
-                  Batch Outcome Summary ({batchSummary.total} Processed)
+                  Batch Outcome Summary ({batchSummary.validRecords ?? batchSummary.total} / {batchSummary.total} Valid)
                 </span>
-                <div className="flex items-center space-x-3 text-xs font-mono">
-                  <span className="text-cyan-400">{batchSummary.excellent} Excellent</span>
-                  <span className="text-emerald-400">{batchSummary.good} Good</span>
-                  <span className="text-amber-400">{batchSummary.average} Average</span>
-                  <span className="text-rose-400">{batchSummary.needsImprovement} Needs Imp.</span>
+                <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
+                  <span className="text-cyan-400">
+                    {batchSummary.classDistribution?.Excellent ?? batchSummary.excellent ?? 0} Excellent
+                  </span>
+                  <span className="text-emerald-400">
+                    {batchSummary.classDistribution?.Good ?? batchSummary.good ?? 0} Good
+                  </span>
+                  <span className="text-amber-400">
+                    {batchSummary.classDistribution?.Average ?? batchSummary.average ?? 0} Average
+                  </span>
+                  <span className="text-rose-400">
+                    {batchSummary.classDistribution?.['Needs Improvement'] ?? batchSummary.needsImprovement ?? 0} Needs Imp.
+                  </span>
                 </div>
               </div>
 
